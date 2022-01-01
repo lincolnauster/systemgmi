@@ -3,7 +3,7 @@
 
 #include "log.h"
 
-static int cnt_stage = 0;
+static int cnt_stage = 1;
 
 /* Return the number of characters the stage indicator has taken up. */
 static unsigned int stage_offset(void);
