@@ -38,7 +38,7 @@ main(int argc, char **argv)
 	mn_neofetch();
 	mn_hostname();
 
-	log_stage("PRE-FLIGHT CHECKS");
+	log_stage("NETWORK SETUP");
 
 	struct fallible_tls_ctx f_tls_ctx = setup_tls();
 	struct tls_ctx *tls_ctx = f_tls_ctx.ok;
