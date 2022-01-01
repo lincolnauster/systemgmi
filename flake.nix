@@ -1,34 +1,39 @@
 {
+  inputs.flake-utils.url = "github:numtide/flake-utils";
   inputs.nixpkgs.url = "github:nixos/nixpkgs/release-21.11";
   inputs.stlsc.url = "github:lincolnauster/stlsc";
 
-  outputs = { self, nixpkgs, stlsc }:
-    let
-      pkgs = import nixpkgs { system = "x86_64-linux"; };
-      sacrificial-cert = stlsc.defaultPackage.x86_64-linux;
-    in {
-      defaultPackage.x86_64-linux = pkgs.stdenv.mkDerivation {
-        name = "systemgmi";
-        version = "0.0.1";
-        src = ./.;
+  outputs = { self, flake-utils, nixpkgs, stlsc }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        sacrificial-cert = stlsc.defaultPackage.x86_64-linux;
+        pkgs = import nixpkgs {
+          system = system;
+        };
+      in {
+        defaultPackage = pkgs.stdenv.mkDerivation {
+          name = "systemgmi";
+          version = "0.0.1";
+          src = ./.;
 
-        installPhase = ''
-          mkdir -p $out/bin
-          cp systemgmi $out/bin/
-        '';
+          installPhase = ''
+            mkdir -p $out/bin
+            cp systemgmi $out/bin/
+          '';
 
-        doConfigure = false;
+          doConfigure = false;
 
-        buildInputs = with pkgs; [ openssl ];
-      };
+          buildInputs = with pkgs; [ openssl ];
+        };
 
-      devShell.x86_64-linux = pkgs.mkShell {
-        nativeBuildInputs = with pkgs; [ valgrind openssl_3_0 gcc gnumake ];
+        devShell = pkgs.mkShell {
+          nativeBuildInputs = with pkgs; [ valgrind openssl_3_0 gcc gnumake ];
 
-        shellHook = ''
-          export SYSTEMGMI_TLS_KEY=${sacrificial-cert}/privkey.pem
-          export SYSTEMGMI_TLS_CERT=${sacrificial-cert}/tlscert.pem
-        '';
-      };
-    };
+          shellHook = ''
+            export SYSTEMGMI_TLS_KEY=${sacrificial-cert}/privkey.pem
+            export SYSTEMGMI_TLS_CERT=${sacrificial-cert}/tlscert.pem
+          '';
+        };
+      }
+    );
 }
