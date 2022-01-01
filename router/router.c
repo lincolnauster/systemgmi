@@ -78,7 +78,6 @@ write_page(struct tls_str *s, struct route r)
 		com_write(s, "=> systemctl/list-units/ Status by unit\n");
 
 		free(buf);
-		free(hn);
 	} else if (r.type == ROUTE_LIST_UNITS) {
 		char *hn, *head;
 		hn = mn_hostname();
@@ -91,6 +90,5 @@ write_page(struct tls_str *s, struct route r)
 		com_write(s, head);
 
 		free(head);
-		free(hn);
 	}
 }

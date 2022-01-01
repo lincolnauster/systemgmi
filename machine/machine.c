@@ -9,6 +9,9 @@
 static int nf_cached = 0;
 static char *nf_buf = NULL;
 
+static int hn_cached = 0;
+static char *hn_buf = NULL;
+
 /* Given a string and whether or not it starts inside an ANSI escape code (the
  * second int param), remove all ANSI escape codes from it. */
 static int remove_ansi_escapes(char *, int);
@@ -19,13 +22,22 @@ void
 mn_clear_cache(void)
 {
 	if (nf_cached) free(nf_buf);
+	if (hn_cached) free(hn_buf);
 }
 
 char *
 mn_hostname(void)
 {
+	if (hn_cached) return hn_buf;
+
+	log_debug("Caching machine hostname.");
 	char *buf = malloc(1024);
 	gethostname(buf, 1023);
+
+	log_debug("Cached machine hostname.");
+	hn_buf = buf;
+	hn_cached = 1;
+
 	return buf;
 }
 
