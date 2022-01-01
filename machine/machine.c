@@ -80,12 +80,11 @@ mn_neofetch(void)
 	fclose(nf_out);
 	free(pr_buf);
 	nf_cached = 1;
-	log_debug("Cached neofetch output.");
 
 	if (nf_cur == nf_buf) { /* no input was read */
 		log_info("neofetch isn't installed or inaccessible via /bin/sh.");
 		nf_buf = NULL;
-	}
+	} else log_debug("Cached neofetch output.");
 
 	return nf_buf;
 }
