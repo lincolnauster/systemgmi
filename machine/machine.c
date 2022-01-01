@@ -30,7 +30,6 @@ mn_hostname(void)
 {
 	if (hn_cached) return hn_buf;
 
-	log_debug("Caching machine hostname.");
 	char *buf = malloc(1024);
 	gethostname(buf, 1023);
 
@@ -49,8 +48,6 @@ mn_neofetch(void)
 	char *nf_cur, *pr_buf;
 	int l, sl, inansiesc;
 	FILE *nf_out;
-
-	log_debug("Caching neofetch output.");
 
 	// The capacities here are complete guesss, but 8192 bytes seems to be
 	// enough for the logo. Calloc is used here to minimize the impact of
