@@ -34,6 +34,10 @@ main(int argc, char **argv)
 	if (argc > 1 && cli_matches(argv[1], "--help"))
 		return help();
 
+	log_stage("CACHE POPULATION");
+	mn_neofetch();
+	mn_hostname();
+
 	log_stage("PRE-FLIGHT CHECKS");
 
 	struct fallible_tls_ctx f_tls_ctx = setup_tls();
