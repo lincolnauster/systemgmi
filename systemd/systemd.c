@@ -29,16 +29,13 @@ static struct sd_unit_arr *list_units(void);
 int
 sd_connect(void)
 {
-	struct sd_unit_arr *units;
-
 	log_debug("Connecting to the user bus.");
 
 	if (sd_bus_default_user(&ctx.bus) < 0) return 1;
 
 	log_debug("Caching listed units.");
 
-	if ((units = list_units()) == NULL) return 1;
-	ctx.units = units;
+	if ((ctx.units = list_units()) == NULL) return 1;
 
 	log_debug("[TODO] subscribing to systemd changes");
 
