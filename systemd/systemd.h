@@ -1,8 +1,8 @@
 struct sd_unit {
 	char *name;
 	char *desc;
-	int loaded:1;
-	int active:1;
+	int loaded;
+	int active;
 };
 
 struct sd_unit_iter;
