@@ -126,6 +126,7 @@ list_units(void)
 
 		entry.loaded = strcmp(loaded, "loaded") == 0;
 		entry.active = strcmp(loaded, "active") == 0;
+		ret->len++;
 	} while (r != 0);
 
 	sd_bus_message_unref(reply);
