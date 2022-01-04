@@ -36,27 +36,31 @@ definitely do not be afraid to contribute those changes (even highly opinionated
 ones) upstream! If you have Nix installed already and want a quick development
 environment, `nix develop` will place you in a shell with a completely working
 build and test environment including libraries and down to a sacrificial TLS
-certificate pointed to by the proper environment variables.
+certificate pointed to by the proper environment variables. The PEM password is
+"password".
 
-If you want a style guide, I roughly adhere to Suckless' style. The only part of
-that which is actually important is that headers are not to be included by other
-headers. Only individual compilation units may `#include` things. Other than
-that, just make a good faith effort to keep the code you write homogeneous with
-what's already there. I find this style keeps individual units nice and isolated
-and encapsulated, which is particularly helpful when working with 'heavy'
-bindings like that of dbus and OpenSSL.
+If you want a style guide, I roughly adhere to Suckless' style: function
+declarations are split over three lines, use 8-character tabs for indentation
+and spaces for alignment, etc. The only part of that which is actually important
+is that headers are not to be included by other headers. Only individual
+compilation units may `#include` things. Other than that, just make a good faith
+effort to keep the code you write homogeneous with what's already there. I find
+this style keeps individual units nice and isolated and encapsulated, which is
+particularly helpful when working with 'heavy' bindings like that of dbus and
+OpenSSL.
 
 If you want something to work on, you can `git grep` for `TODO`s in the code
 base, or take a look at this list of things I haven't gotten to yet and/or fully
 considered:
 
-+ The error messages aren't currently that great. While *some* of the issues are
-  just copy, the real issue is that the causes of errors are ignored, and we
-  don't check things like `errno`.
++ Error messages and handling isn't great. I haven't really tested the edge
+  cases, and I'd expect safety issues and a variety of problems recovering debug
+  information (i.e., `errno`).
 + Systemgmi can't be bound to listen on any IP other than 0.0.0.0. It would make
   sense to refactor this into an environment variable.
 + Systemgmi can't control processes. Adding some links to start, restart, stop,
-  enable, and disable units could be a good idea. Maybe.
+  enable, and disable units (maybe with access limited to a client-side cert)
+  could be a good idea. Maybe.
 + Logging has no unified approach. Systemgmi just sort of logs whatever it feels
   like without considering why. Someone help.
 + Systemgmi doesn't quite have a pedantic interpretation of the draft spec. This
