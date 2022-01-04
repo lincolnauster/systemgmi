@@ -7,12 +7,10 @@
 
 #include "com/com.h"
 #include "com/util.h"
-
 #include "log/log.h"
-
 #include "machine/machine.h"
-
 #include "router/router.h"
+#include "systemd/systemd.h"
 
 /* Given two C-strings, return 1 if they can be considered equivalent as CLI
  * arguments; i.e., --version matches -v, but not --ver or --v. a is expected to
@@ -37,6 +35,9 @@ main(int argc, char **argv)
 	log_stage("CACHE POPULATION");
 	mn_neofetch();
 	mn_hostname();
+
+	if (sd_connect() != 0)
+		log_fatal("Couldn't set up systemd connection.");
 
 	log_stage("NETWORK SETUP");
 
@@ -68,6 +69,9 @@ main(int argc, char **argv)
 	pthread_cancel(server);
 	pthread_join(server, NULL);
 	log_debug("All threads terminated.");
+
+	sd_disconnect();
+	log_debug("Disconnected from the dbus user bus.");
 
 	free_tls_ctx(tls_ctx);
 	free_tls_conn(tls_conn);

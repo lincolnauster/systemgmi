@@ -2,10 +2,10 @@ CC=gcc
 CFLAGS=-Wall -Werror -pedantic -g
 # ^ I would use -std=c99, but signal.h seems to hate that
 
-systemgmi: main.o log.o com.o com_util.o machine.o router.o
-	$(CC) $(CFLAGS) main.o log.o com.o com_util.o machine.o router.o \
+systemgmi: main.o log.o com.o com_util.o machine.o router.o systemd.o
+	$(CC) $(CFLAGS) main.o log.o com.o com_util.o machine.o router.o systemd.o \
 	      -o systemgmi \
-	      -lssl -pthread
+	      -lsystemd -lssl -pthread
 main.o: main.c log.o com.o machine.o router.o
 	$(CC) $(CFLAGS) -c main.c -o main.o
 log.o: log/log.c log/log.h
@@ -18,6 +18,8 @@ machine.o: machine/machine.c machine/machine.h
 	$(CC) $(CFLAGS) -c machine/machine.c -o machine.o
 router.o: router/router.c router/router.h
 	$(CC) $(CFLAGS) -c router/router.c -o router.o
+systemd.o: systemd/systemd.h systemd/systemd.c
+	$(CC) $(CFLAGS) -c systemd/systemd.c -o systemd.o
 
 clean:
 	rm systemgmi

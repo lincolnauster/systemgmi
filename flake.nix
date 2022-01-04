@@ -23,11 +23,13 @@
 
           doConfigure = false;
 
-          buildInputs = with pkgs; [ openssl ];
+          buildInputs = with pkgs; [ systemd openssl ];
         };
 
         devShell = pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [ valgrind openssl_3_0 gcc gnumake ];
+          nativeBuildInputs = with pkgs; [
+            systemd openssl_3_0 gcc gnumake valgrind
+          ];
 
           shellHook = ''
             export SYSTEMGMI_TLS_KEY=${sacrificial-cert}/privkey.pem
