@@ -6,11 +6,10 @@
 #include "systemd.h"
 #include "../log/log.h"
 
-struct sd_unit {
-	char *name;
-	char *desc;
-	int loaded;
-	int active;
+struct sd_unit_iter {
+	struct sd_unit *ptr;
+	int idx;
+	int max;
 };
 
 struct sd_unit_arr {
@@ -47,12 +46,43 @@ sd_disconnect(void)
 {
 	sd_bus_unref(ctx.bus);
 
+	for (int i = 0; i < ctx.units->len; i++) {
+		free(ctx.units->buf[i].name);
+		free(ctx.units->buf[i].desc);
+	}
+
 	free(ctx.units->buf);
 	ctx.units->cap = 0;
 	ctx.units->len = 0;
 	ctx.units->buf = NULL;
 	free(ctx.units);
 	ctx.units = NULL;
+}
+
+struct sd_unit_iter *
+sd_unit_iterate(void)
+{
+	struct sd_unit_iter *iter = malloc(sizeof(struct sd_unit_iter));
+
+	iter->idx = 0;
+	iter->ptr = ctx.units->buf;
+	iter->max = ctx.units->len;
+
+	return iter;
+}
+
+struct sd_unit *
+sd_unit_iter_next(struct sd_unit_iter *i)
+{
+	if (i->idx >= i->max) return NULL;
+	else return &(i->ptr[i->idx++]);
+}
+
+void
+sd_unit_iterate_free(struct sd_unit_iter *i)
+{
+	// nothing fancy to cleanup, this is just a bounds-cehcking pointer
+	free(i);
 }
 
 static struct sd_unit_arr *
@@ -123,6 +153,11 @@ list_units(void)
 
 		entry.loaded = strcmp(loaded, "loaded") == 0;
 		entry.active = strcmp(loaded, "active") == 0;
+
+		ret->buf[ret->len].name = strdup(entry.name);
+		ret->buf[ret->len].desc = strdup(entry.desc);
+		ret->buf[ret->len].loaded = entry.loaded;
+		ret->buf[ret->len].loaded = entry.active;
 		ret->len++;
 	} while (r != 0);
 

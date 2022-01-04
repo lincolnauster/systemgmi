@@ -6,6 +6,7 @@
 
 #include "../com/com.h"
 #include "../machine/machine.h"
+#include "../systemd/systemd.h"
 #include "router.h"
 
 static enum route_type match_route(const char *);
@@ -79,16 +80,27 @@ write_page(struct tls_str *s, struct route r)
 
 		free(buf);
 	} else if (r.type == ROUTE_LIST_UNITS) {
-		char *hn, *head;
+		char *hn, *head, *buf;
+		struct sd_unit_iter *iter;
+		struct sd_unit *unit;
+
 		hn = mn_hostname();
 
 		com_write(s, "20 text/gemini\r\n");
 
 		head = malloc(sizeof("# Units on ") + strlen(hn) + 1);
 		sprintf(head, "# Units on %s\n", hn);
-
 		com_write(s, head);
 
+		iter = sd_unit_iterate();
+		while ((unit = sd_unit_iter_next(iter))) {
+			buf = malloc(strlen(unit->name) + 4);
+			sprintf(buf, "* %s\n", unit->name);
+			com_write(s, buf);
+			free(buf);
+		}
+
+		sd_unit_iterate_free(iter);
 		free(head);
 	}
 }
