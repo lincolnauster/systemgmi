@@ -11,6 +11,8 @@
 
 static enum route_type match_route(const char *);
 
+static void unit_write(struct tls_str *, struct sd_unit *);
+
 struct route
 route_url(const char *url)
 {
@@ -80,7 +82,7 @@ write_page(struct tls_str *s, struct route r)
 
 		free(buf);
 	} else if (r.type == ROUTE_LIST_UNITS) {
-		char *hn, *head, *buf;
+		char *hn, *head;
 		struct sd_unit_iter *iter;
 		struct sd_unit *unit;
 
@@ -93,14 +95,23 @@ write_page(struct tls_str *s, struct route r)
 		com_write(s, head);
 
 		iter = sd_unit_iterate();
-		while ((unit = sd_unit_iter_next(iter))) {
-			buf = malloc(strlen(unit->name) + 4);
-			sprintf(buf, "* %s\n", unit->name);
-			com_write(s, buf);
-			free(buf);
-		}
+		while ((unit = sd_unit_iter_next(iter)))
+			unit_write(s, unit);
 
 		sd_unit_iterate_free(iter);
 		free(head);
 	}
+}
+
+static void
+unit_write(struct tls_str *s, struct sd_unit *u)
+{
+	com_write(s, "## ");
+	com_write(s, u->name);
+	com_write(s, "\n");
+	if (u->loaded) com_write(s, "[loaded] ");
+	if (u->active) com_write(s, "[active] ");
+	if (u->loaded || u->active) com_write(s, "\n");
+	com_write(s, u->desc);
+	com_write(s, "\n");
 }
