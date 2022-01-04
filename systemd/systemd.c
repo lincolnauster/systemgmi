@@ -152,12 +152,12 @@ list_units(void)
 		}
 
 		entry.loaded = strcmp(loaded, "loaded") == 0;
-		entry.active = strcmp(loaded, "active") == 0;
+		entry.active = strcmp(active, "active") == 0;
 
 		ret->buf[ret->len].name = strdup(entry.name);
 		ret->buf[ret->len].desc = strdup(entry.desc);
 		ret->buf[ret->len].loaded = entry.loaded;
-		ret->buf[ret->len].loaded = entry.active;
+		ret->buf[ret->len].active = entry.active;
 		ret->len++;
 	} while (r != 0);
 
