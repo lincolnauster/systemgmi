@@ -29,7 +29,7 @@ route_url(const char *url)
 
 	for (
 		without_host = without_scheme;
-		without_host[0] != '/' && without_host[0] != '\0';
+		*without_host != '/' && *without_host != '\0';
 		without_host++
 	) {}
 
