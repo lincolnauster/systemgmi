@@ -109,9 +109,10 @@ unit_write(struct tls_str *s, struct sd_unit *u)
 	com_write(s, "## ");
 	com_write(s, u->name);
 	com_write(s, "\n");
+	if (u->loaded || u->active) com_write(s, "```system status summary\n");
 	if (u->loaded) com_write(s, "[loaded] ");
 	if (u->active) com_write(s, "[active] ");
-	if (u->loaded || u->active) com_write(s, "\n");
+	if (u->loaded || u->active) com_write(s, "\n```\n");
 	com_write(s, u->desc);
 	com_write(s, "\n");
 }
