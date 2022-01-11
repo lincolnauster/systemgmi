@@ -23,7 +23,7 @@
 
           dontConfigure = true;
 
-          buildInputs = with pkgs; [ systemd openssl ];
+          buildInputs = with pkgs; [ systemd openssl_3_0 ];
         };
 
         devShell = pkgs.mkShell {
