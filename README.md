@@ -81,3 +81,7 @@ the GNU General Public License in all respects for all code used other than
 OpenSSL. If you modify file(s) with this exception, may extend this exception to
 your file(s), but you are not obligated to do so. If you do not wish to do so,
 remove these paragraphs declaring the exception from your version.
+
+## Conforming To
++ C17
++ POSIX.1-2008

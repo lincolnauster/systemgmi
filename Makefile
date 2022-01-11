@@ -1,6 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Werror -pedantic -g
-# ^ I would use -std=c99, but signal.h seems to hate that
+CFLAGS=-D_POSIX_C_SOURCE=200809L -std=c17 -Wall -Werror -pedantic -g
 
 systemgmi: main.o log.o com.o com_util.o machine.o router.o systemd.o
 	$(CC) $(CFLAGS) main.o log.o com.o com_util.o machine.o router.o systemd.o \
