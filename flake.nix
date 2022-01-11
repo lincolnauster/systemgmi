@@ -21,7 +21,7 @@
             cp systemgmi $out/bin/
           '';
 
-          doConfigure = false;
+          dontConfigure = true;
 
           buildInputs = with pkgs; [ systemd openssl ];
         };
