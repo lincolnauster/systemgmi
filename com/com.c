@@ -209,7 +209,7 @@ str_err(enum COM_ERR e)
 	case COM_E_NO_KEY:
 		return "No key was found. Is SYSTEMGMI_TLS_KEY set and valid?";
 	case COM_E_NO_CERT:
-		return "No certificate was fonud. Is SYSTEMGMI_TLS_CERT set and valid?";
+		return "No certificate was found. Is SYSTEMGMI_TLS_CERT set and valid?";
 	case COM_E_BAD_KEY:
 		return "The given private key could not be used. Is it valid?";
 	case COM_E_BAD_CERT:
