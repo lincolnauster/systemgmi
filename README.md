@@ -82,6 +82,13 @@ OpenSSL. If you modify file(s) with this exception, may extend this exception to
 your file(s), but you are not obligated to do so. If you do not wish to do so,
 remove these paragraphs declaring the exception from your version.
 
+## Building
+On systems that support Nix Flakes, simply `nix build` a checkout of the source
+tree. On systems with only the traditional toolchain, systemgmi is tested on and
+known to be supported by GCC and GNU Make. It depends upon OpenSSL 3.0.1 and
+systemd 249.7. While untested, other versions of these dependencies will, in
+high probability, work just as well.
+
 ## Conforming To
 + C17
 + POSIX.1-2008
