@@ -23,12 +23,12 @@
 
           dontConfigure = true;
 
-          buildInputs = with pkgs; [ systemd openssl_3_0 ];
+          buildInputs = with pkgs; [ icu systemd openssl_3_0 pkg-config ];
         };
 
         devShell = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
-            systemd openssl_3_0 gcc gnumake valgrind
+            icu systemd openssl_3_0 gcc gnumake pkg-config valgrind
           ];
 
           shellHook = ''

@@ -5,6 +5,8 @@
 #include <signal.h>
 #include <unistd.h>
 
+#include <unicode/uclean.h>
+
 #include "com/com.h"
 #include "com/util.h"
 #include "log/log.h"
@@ -77,6 +79,7 @@ main(int argc, char **argv)
 	free_tls_ctx(tls_ctx);
 	free_tls_conn(tls_conn);
 	mn_clear_cache();
+	u_cleanup();
 	log_debug("All known heap objects freed.");
 
 	return 0;

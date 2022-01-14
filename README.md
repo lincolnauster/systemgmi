@@ -85,9 +85,10 @@ remove these paragraphs declaring the exception from your version.
 ## Building
 On systems that support Nix Flakes, simply `nix build` a checkout of the source
 tree. On systems with only the traditional toolchain, systemgmi is tested on and
-known to be supported by GCC and GNU Make. It depends upon OpenSSL 3.0.1 and
-systemd 249.7. While untested, other versions of these dependencies will, in
-high probability, work just as well.
+known to be supported by GCC and GNU Make. It depends upon OpenSSL 3.0.1,
+systemd 249.7 (the library, not the init system), and ICU 70.1. While untested,
+other versions of these dependencies will, in high probability, work just as
+well: systemgmi isn't doing anything too fancy with any of them.
 
 ## Conforming To
 + C17

@@ -4,7 +4,8 @@ CFLAGS=-D_POSIX_C_SOURCE=200809L -std=c17 -Wall -Werror -pedantic -g
 systemgmi: main.o log.o com.o com_util.o machine.o router.o systemd.o
 	$(CC) $(CFLAGS) main.o log.o com.o com_util.o machine.o router.o systemd.o \
 	      -o systemgmi \
-	      -lsystemd -lssl -pthread
+	      -lsystemd -lssl -pthread \
+	      `pkg-config --cflags --libs icu-uc`
 main.o: main.c log.o com.o machine.o router.o
 	$(CC) $(CFLAGS) -c main.c -o main.o
 log.o: log/log.c log/log.h
