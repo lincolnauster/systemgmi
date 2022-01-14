@@ -12,6 +12,10 @@ static char *nf_buf = NULL;
 static int hn_cached = 0;
 static char *hn_buf = NULL;
 
+/* Return a string (must be free(2)'d by the caller) containing the logo
+ * obtained from neofetch. */
+static char *neofetch_logo(void);
+
 /* Given a string and whether or not it starts inside an ANSI escape code (the
  * second int param), remove all ANSI escape codes from it. */
 static int remove_ansi_escapes(char *, int);
@@ -43,50 +47,62 @@ mn_hostname(void)
 char *
 mn_neofetch(void)
 {
-	if (nf_cached) return nf_buf;
+	if (!nf_cached) {
+		if (!(nf_buf = neofetch_logo())) {
+			log_info("neofetch isn't installed or is inaccessible via /bin/sh.");
+			log_info("No neofetch output will be present on route /.");
+		} else log_debug("Cached neofetch output.");
 
-	char *nf_cur, *pr_buf;
+		nf_cached = 1;
+	}
+
+	return nf_buf;
+}
+
+static char *
+neofetch_logo(void)
+{
+	char *nfl_buf, *nfl_cur, *pr_buf;
 	int l, sl, inansiesc;
-	FILE *nf_out;
+	FILE *nfl_out;
 
 	// The capacities here are complete guesss, but 8192 bytes seems to be
 	// enough for the logo. Calloc is used here to minimize the impact of
 	// any null-terminator-related footguns.
-	nf_cur = nf_buf = calloc(1, 8192);
+	nfl_cur = nfl_buf = calloc(1, 8192);
 	pr_buf = malloc(512);
 
-	nf_out = popen("neofetch --logo 2> /dev/null", "r");
+	nfl_out = popen("neofetch --logo 2> /dev/null", "r");
 
 	inansiesc = 0;
-	while ((l = fread(pr_buf, 1, 511, nf_out)) > 0) {
+	while ((l = fread(pr_buf, 1, 511, nfl_out)) > 0) {
 		pr_buf[l] = '\0'; // terminate
 
-		// remove colors that gemini clients can't handle
+		// remove colors that gemini clients can't handle. This is done
+		// in 512-byte batches for performance reasons. (No benchmarks,
+		// though. TODO).
 		inansiesc = remove_ansi_escapes(pr_buf, inansiesc);
 
 		sl = strlen(pr_buf);
-		memcpy(nf_cur, pr_buf, sl);
-		nf_cur += sl;
+		memcpy(nfl_cur, pr_buf, sl);
+		nfl_cur += sl;
 	}
 
 	// I have no idea why, but neofetch has appended 21 blank lines of
 	// output to my neofetch - let's kill it here (after removing ANSI
 	// codes), but keep one trailing newline.
-	strip_trailing_whitespace(nf_buf);
-	sl = strlen(nf_buf);
-	nf_buf[sl++] = '\n';
-	nf_buf[sl] = '\0';
+	strip_trailing_whitespace(nfl_buf);
+	sl = strlen(nfl_buf);
+	nfl_buf[sl++] = '\n';
+	nfl_buf[sl] = '\0';
 
-	fclose(nf_out);
+	fclose(nfl_out);
 	free(pr_buf);
-	nf_cached = 1;
 
-	if (nf_cur == nf_buf) { /* no input was read */
-		log_info("neofetch isn't installed or inaccessible via /bin/sh.");
-		nf_buf = NULL;
-	} else log_debug("Cached neofetch output.");
-
-	return nf_buf;
+	if (nfl_cur == nfl_buf) { /* no input was read */
+		free(nfl_buf);
+		return NULL;
+	} else return nfl_buf;
 }
 
 static int
