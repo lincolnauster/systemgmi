@@ -7,6 +7,14 @@ it as sort of like `systemctl status` served over Gemini. It latches on to the
 configuration of systemd, and, as such, requires no configuration of its own
 outside of a TLS certificate and a few environment variables.
 
+## Goals & Scope
+Systemgmi should slot into any server environment with very little effort (or,
+ideally, no effort at all). If people are doing crazy things with this, it's
+built incorrectly. Working around its environment, systemgmi should never crash
+or error out at runtime (excluding pre-flight checks) and never exhibit
+unexpected behavior. Some environment variables and `systemctl enable` is all
+that should be required to have an instance of systemgmi in *any case*.
+
 ## Usage
 Enable/start the systemgmi service, giving it a TLS certificate in environment
 variables (see `--help` for which env vars exactly). If you navigate to your IP,
@@ -21,14 +29,6 @@ If you follow the link for a unit, you'll see information roughly equivalent to
 running `systemctl status <unit>`: is it running, how much RAM is it using, etc.
 If systemgmi is running as a user with the proper permissions, you can also view
 the journal for that unit.
-
-## Goals & Scope
-Systemgmi should slot into any server environment with very little effort (or,
-ideally, no effort at all). If people are doing crazy things with this, it's
-built incorrectly. Working around its environment, systemgmi should never crash
-or error out at runtime (excluding pre-flight checks) and never exhibit
-unexpected behavior. Some environment variables and `systemctl enable` is all
-that should be required to have an instance of systemgmi in *any case*.
 
 ## Contributing
 Do not be afraid to deform systemgmi beyond recognition! And, if you'd like,
