@@ -53,8 +53,6 @@ main(int argc, char **argv)
 
 	log_debug("Systemgmi bound to port 1965.");
 
-	// Once we start serving, we want to delay cleanup until CTRL-C has been
-	// pressed.
 	struct listen_conf lc = {
 		.con = tls_conn,
 		.callback = serve,
@@ -62,6 +60,9 @@ main(int argc, char **argv)
 
 	log_stage("SERVING");
 	pthread_t server = com_listen(&lc);
+
+	// Once we start serving, we want to delay cleanup until CTRL-C has been
+	// pressed.
 	block_till_kill();
 
 	log_stage("CLEANUP");
