@@ -11,9 +11,9 @@ outside of a TLS certificate and a few environment variables.
 Systemgmi should slot into any server environment with very little effort (or,
 ideally, no effort at all). If people are doing crazy things with this, it's
 built incorrectly. Working around its environment, systemgmi should never crash
-or error out at runtime (excluding pre-flight checks) and never exhibit
-unexpected behavior. Some environment variables and `systemctl enable` is all
-that should be required to have an instance of systemgmi in *any case*.
+or error out at runtime (excluding startup checks) and never exhibit unexpected
+behavior. Some environment variables and `systemctl enable` is all that should
+be required to have an instance of systemgmi in *any case*.
 
 ## Usage
 Enable/start the systemgmi service, giving it a TLS certificate in environment
@@ -22,7 +22,8 @@ you'll see systegmi's index. It contains the following:
 
 + the hostname
 + a little neofetch run (if neofetch is in PATH)
-+ a link to the system journal (if permissions are present)
++ [WIP] a link to the system journal (if permissions are present)
++ [WIP] a link to a streaming version of the journal (if permissions are present)
 + a list of units
 
 If you follow the link for a unit, you'll see information roughly equivalent to
@@ -70,6 +71,14 @@ considered:
   an admin console providing access to things like cache management, etc, could
   be useful.
 
+## Building
+On systems that support Nix Flakes, simply `nix build` a checkout of the source
+tree. On systems with only the traditional toolchain, systemgmi is tested on and
+known to be supported by GCC and GNU Make. It depends upon OpenSSL 3.0.1,
+systemd 249.7 (the library, not the init system), and ICU 70.1. While untested,
+other versions of these dependencies will, in high probability, work just as
+well: systemgmi isn't doing anything too fancy with any of them.
+
 ## Licensing
 systemgmi is Free Software which you may distribute under the terms of the GNU
 General Public License as published by the FSF and distributed in the LICENSE
@@ -81,14 +90,6 @@ the GNU General Public License in all respects for all code used other than
 OpenSSL. If you modify file(s) with this exception, may extend this exception to
 your file(s), but you are not obligated to do so. If you do not wish to do so,
 remove these paragraphs declaring the exception from your version.
-
-## Building
-On systems that support Nix Flakes, simply `nix build` a checkout of the source
-tree. On systems with only the traditional toolchain, systemgmi is tested on and
-known to be supported by GCC and GNU Make. It depends upon OpenSSL 3.0.1,
-systemd 249.7 (the library, not the init system), and ICU 70.1. While untested,
-other versions of these dependencies will, in high probability, work just as
-well: systemgmi isn't doing anything too fancy with any of them.
 
 ## Conforming To
 + C17
