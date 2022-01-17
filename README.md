@@ -31,6 +31,33 @@ running `systemctl status <unit>`: is it running, how much RAM is it using, etc.
 If systemgmi is running as a user with the proper permissions, you can also view
 the journal for that unit.
 
+### NixOS
+If your server is running NixOS and supports Flakes, then you can wire this
+repository up as an input and enable it with `services.systemgmi.enable = true'.
+See the below for a complete (though untested) example of a flake.nix.
+
+```nix
+{
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/-nixos-21.11";
+  inputs.systemgmi.url = "github:lincolnauster/systemgmi";
+
+  outputs = { self, nixpkgs, systemgmi }: {
+    nixosConfigurations."<hostname>" = nixpkgs.lib.nixosSystem {
+      # ... all the standard boilerplate ...
+
+      modules = [
+        systemgmi.nixosModule
+
+        ({
+          services.systemgmi.enable = true;
+          services.systemgmi.user = "myaccount";
+        })
+      ];
+    };
+  }
+}
+```
+
 ## Contributing
 Do not be afraid to deform systemgmi beyond recognition! And, if you'd like,
 definitely do not be afraid to contribute those changes (even highly opinionated
