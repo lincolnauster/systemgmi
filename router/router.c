@@ -17,6 +17,13 @@ struct route
 route_url(const char *url)
 {
 	struct route r;
+	if (!url) {
+		r.type = ROUTE_INVALID_REQUEST;
+		r.md = "Client violated the protocol.";
+		r.mdcp = sizeof("Client violated the protocol.");
+		goto out;
+	}
+
 	const char *without_scheme, *without_host;
 
 	for (
@@ -38,6 +45,8 @@ route_url(const char *url)
 	r.type = match_route(without_host);
 	r.md = NULL;
 	r.mdcp = 0;
+
+out:
 	return r;
 }
 
@@ -57,7 +66,11 @@ write_page(struct tls_str *s, struct route r)
 {
 	if (r.type == ROUTE_NOT_FOUND)
 		com_write(s, "51\r\n");
-	else if (r.type == ROUTE_INDEX) {
+	else if (r.type == ROUTE_INVALID_REQUEST) {
+		com_write(s, "59 ");
+		com_write(s, r.md);
+		com_write(s, "\r\n");
+	} else if (r.type == ROUTE_INDEX) {
 		char *hn, *nf, *buf;
 		int tmp;
 

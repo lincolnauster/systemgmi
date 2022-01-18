@@ -1,6 +1,8 @@
 enum route_type {
 	/* no metadata */
 	ROUTE_NOT_FOUND,
+	/* metadata is a string with more information about the failure. */
+	ROUTE_INVALID_REQUEST,
 	ROUTE_INDEX,
 	ROUTE_LIST_UNITS,
 	/* metadata is a string representing the amount of logs to send, which
@@ -17,6 +19,8 @@ struct route {
 	int mdcp;
 };
 
+/* Given a request from a client, produce a route. Pass NULL to indicate an
+ * invalid request. */
 struct route route_url(const char *);
 
 void write_page(struct tls_str *, struct route);

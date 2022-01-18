@@ -116,15 +116,15 @@ serve(struct tls_str *x)
 	write_page(x, r);
 	com_close(x);
 
-	log_len = strlen("Served resource: ") + strlen(url) + 1;
-	log_msg = malloc(log_len);
-	memcpy(log_msg, "Served resource: ", strlen("Served resource: "));
-	memcpy(log_msg + strlen("Served resource: "), url, strlen(url) + 1);
-
-	log_info(log_msg);
-
-	free(url);
-	free(log_msg);
+	if (url) {
+		log_len = strlen("Served resource: ") + strlen(url) + 1;
+		log_msg = malloc(log_len);
+		memcpy(log_msg, "Served resource: ", strlen("Served resource: "));
+		memcpy(log_msg + strlen("Served resource: "), url, strlen(url) + 1);
+		log_info(log_msg);
+		free(url);
+		free(log_msg);
+	}
 	return;
 }
 
