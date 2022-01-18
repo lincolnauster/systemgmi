@@ -20,7 +20,6 @@ route_url(const char *url)
 	if (!url) {
 		r.type = ROUTE_INVALID_REQUEST;
 		r.md = "Client violated the protocol.";
-		r.mdcp = sizeof("Client violated the protocol.");
 		goto out;
 	}
 
@@ -44,7 +43,6 @@ route_url(const char *url)
 
 	r.type = match_route(without_host);
 	r.md = NULL;
-	r.mdcp = 0;
 
 out:
 	return r;

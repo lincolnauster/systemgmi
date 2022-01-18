@@ -16,7 +16,6 @@ enum route_type {
 struct route {
 	enum route_type type;
 	char *md;
-	int mdcp;
 };
 
 /* Given a request from a client, produce a route. Pass NULL to indicate an
