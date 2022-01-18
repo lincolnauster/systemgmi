@@ -125,7 +125,6 @@ serve(struct tls_str *x)
 		free(url);
 		free(log_msg);
 	}
-	return;
 }
 
 static int
