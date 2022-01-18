@@ -33,7 +33,7 @@ route_url(const char *url)
 		without_host++
 	) {}
 
-	without_host++; // remove starting slash
+	if (*without_host != '\0') without_host++; // remove starting slash
 
 	r.type = match_route(without_host);
 	r.md = NULL;
