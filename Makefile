@@ -1,8 +1,10 @@
 CC=gcc
 CFLAGS=-D_POSIX_C_SOURCE=200809L -std=c17 -Wall -Werror -pedantic -g
 
-systemgmi: main.o log.o com.o com_util.o machine.o router.o systemd.o
-	$(CC) $(CFLAGS) main.o log.o com.o com_util.o machine.o router.o systemd.o \
+systemgmi: main.o log.o com.o com_util.o machine.o router.o systemd.o \
+           threading.o threading_queue.o
+	$(CC) $(CFLAGS) main.o log.o com.o com_util.o machine.o router.o \
+	      systemd.o threading.o threading_queue.o \
 	      -o systemgmi \
 	      -lsystemd -lssl -pthread \
 	      `pkg-config --cflags --libs icu-uc`
@@ -20,6 +22,10 @@ router.o: router/router.c router/router.h
 	$(CC) $(CFLAGS) -c router/router.c -o router.o
 systemd.o: systemd/systemd.h systemd/systemd.c
 	$(CC) $(CFLAGS) -c systemd/systemd.c -o systemd.o
+threading.o: threading/threading.h threading/threading.c
+	$(CC) $(CFLAGS) -c threading/threading.c -o threading.o
+threading_queue.o: threading/queue.h threading/queue.c
+	$(CC) $(CFLAGS) -c threading/queue.c -o threading_queue.o
 
 clean:
 	rm systemgmi

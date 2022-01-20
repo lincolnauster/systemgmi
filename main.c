@@ -13,6 +13,7 @@
 #include "machine/machine.h"
 #include "router/router.h"
 #include "systemd/systemd.h"
+#include "threading/threading.h"
 
 /* Given two C-strings, return 1 if they can be considered equivalent as CLI
  * arguments; i.e., --version matches -v, but not --ver or --v. a is expected to
@@ -22,6 +23,7 @@ static int cli_matches(const char *a, const char *b);
 static void block_till_kill(void);
 
 static void serve(struct tls_str *);
+static void serve_inner(struct tls_str *x);
 
 static int version(void);
 static int help(void);
@@ -40,6 +42,9 @@ main(int argc, char **argv)
 
 	if (sd_connect() != 0)
 		log_fatal("Couldn't set up systemd connection.");
+
+	log_stage("THREADPOOL INIT");
+	threader_init();
 
 	log_stage("NETWORK SETUP");
 
@@ -71,6 +76,7 @@ main(int argc, char **argv)
 
 	pthread_cancel(server);
 	pthread_join(server, NULL);
+	threader_close();
 	log_debug("All threads terminated.");
 
 	sd_disconnect();
@@ -107,6 +113,21 @@ block_till_kill(void)
 
 static void
 serve(struct tls_str *x)
+{
+	struct work *work = malloc(sizeof(struct work));
+	work->args = x;
+
+	work->routine = (void (*)(void *)) serve_inner,
+	// serve_inner cleans up all internal resources, so we can defer the
+	// rest of the cleanup to a simple free(2). It's a bit of a hack, but it
+	// actually works great.
+	work->cleanup = (void (*)(struct work *)) free;
+
+	threader_queue(work);
+}
+
+static void
+serve_inner(struct tls_str *x)
 {
 	char *url, *log_msg;
 	int log_len;
