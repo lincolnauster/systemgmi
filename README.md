@@ -92,5 +92,5 @@ your file(s), but you are not obligated to do so. If you do not wish to do so,
 remove these paragraphs declaring the exception from your version.
 
 ## Conforming To
-+ C17
++ C17 (current minimum C11)
 + POSIX.1-2008
