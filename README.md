@@ -81,15 +81,16 @@ well: systemgmi isn't doing anything too fancy with any of them.
 
 ## Licensing
 systemgmi is Free Software which you may distribute under the terms of the GNU
-General Public License as published by the FSF and distributed in the LICENSE
-file at the root of this source tree.
+Affero General Public License as published by the FSF and distributed in the
+LICENSE file at the root of this source tree.
 
 In addition, as a special exception, the copyright holders provide permission to
 link the code residing in this file tree with the OpenSSL library. You must obey
-the GNU General Public License in all respects for all code used other than
-OpenSSL. If you modify file(s) with this exception, may extend this exception to
-your file(s), but you are not obligated to do so. If you do not wish to do so,
-remove these paragraphs declaring the exception from your version.
+the GNU Affero General Public License in all respects for all code used other
+than OpenSSL. If you modify file(s) with this exception, may extend this
+exception to your file(s), but you are not obligated to do so. If you do not
+wish to do so, remove these paragraphs declaring the exception from your
+version.
 
 ## Conforming To
 + C17 (current minimum C11)
