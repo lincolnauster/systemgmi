@@ -37,42 +37,5 @@
           '';
         };
       }
-    ) // {
-      nixosModule = { config, pkgs, ... }: {
-        options.services.systemgmi = {
-          enable = pkgs.lib.mkOption {
-            default = false;
-            type = pkgs.lib.types.bool;
-            description = ''
-              Whether or not to run a gemini server for system monitoring.
-            '';
-          };
-
-          user = pkgs.lib.mkOption {
-            default = "nobody";
-            type = pkgs.lib.types.str;
-            description = ''
-              The user to run the gemini server as.
-            '';
-          };
-        };
-
-        config = {
-          systemd.services.systemgmi = pkgs.lib.mkIf config.services.systemgmi.enable (
-            let deriv = self.defaultPackage."${pkgs.system}"; in {
-              wantedBy = [ "multi-user.target" ];
-              after = [ "network.target" "dbus.socket" ];
-              description = "Run a gemini server for system monitoring.";
-              serviceConfig = {
-                Type = "exec";
-                User = "${config.services.systemgmi.user}";
-                ExecStart = "${deriv}/bin/systemgmi";
-              };
-          });
-
-          networking.firewall.allowedTCPPorts =
-            pkgs.lib.mkIf config.services.systemgmi.enable [ 1965 ];
-        };
-      };
-    };
+    );
 }
