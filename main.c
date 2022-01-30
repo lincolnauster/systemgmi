@@ -7,6 +7,7 @@
 
 #include <unicode/uclean.h>
 
+#include "cli.h"
 #include "com/com.h"
 #include "com/util.h"
 #include "log/log.h"
@@ -31,6 +32,8 @@ static int help(void);
 int
 main(int argc, char **argv)
 {
+	parse_args(argc, argv);
+
 	if (argc > 1 && cli_matches(argv[1], "--version"))
 		return version();
 	if (argc > 1 && cli_matches(argv[1], "--help"))

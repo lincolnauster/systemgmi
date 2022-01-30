@@ -4,6 +4,7 @@
 #include <systemd/sd-bus.h>
 
 #include "systemd.h"
+#include "../cli.h"
 #include "../log/log.h"
 
 struct sd_unit_iter {
@@ -28,9 +29,17 @@ static struct sd_unit_arr *list_units(void);
 int
 sd_connect(void)
 {
-	log_debug("Connecting to the user bus.");
+	int r;
+	if (cli_use_system_bus)
+		log_debug("Attempting to connecting to the system bus.");
+	else
+		log_debug("Attempting to connecting to the session bus.");
 
-	if (sd_bus_default_user(&ctx.bus) < 0) return 1;
+	r = cli_use_system_bus
+	  ? sd_bus_default_system(&ctx.bus)
+	  : sd_bus_default_user(&ctx.bus);
+
+	if (r < 0) return 1;
 
 	log_debug("Caching listed units.");
 
