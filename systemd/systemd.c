@@ -31,9 +31,9 @@ sd_init(void)
 {
 	int r;
 	if (cli_use_system_bus)
-		log_debug("Attempting to connecting to the system bus.");
+		log_debug("Attempting to connect to the system bus.");
 	else
-		log_debug("Attempting to connecting to the session bus.");
+		log_debug("Attempting to connect to the session bus.");
 
 	r = cli_use_system_bus
 	  ? sd_bus_default_system(&ctx.bus)
