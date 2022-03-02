@@ -43,8 +43,10 @@ main(int argc, char **argv)
 	mn_neofetch();
 	mn_hostname();
 
-	if (sd_init() != 0)
+	if (sd_init() != 0) {
+		sd_uninit();
 		log_fatal("Couldn't set up systemd connection.");
+	}
 
 	log_stage("THREADPOOL INIT");
 	threader_init();
