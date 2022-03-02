@@ -43,7 +43,7 @@ main(int argc, char **argv)
 	mn_neofetch();
 	mn_hostname();
 
-	if (sd_connect() != 0)
+	if (sd_init() != 0)
 		log_fatal("Couldn't set up systemd connection.");
 
 	log_stage("THREADPOOL INIT");
@@ -82,8 +82,8 @@ main(int argc, char **argv)
 	threader_close();
 	log_debug("All threads terminated.");
 
-	sd_disconnect();
-	log_debug("Disconnected from the dbus user bus.");
+	sd_uninit();
+	log_debug("Uninitialized dbus connection.");
 
 	free_tls_ctx(tls_ctx);
 	free_tls_conn(tls_conn);

@@ -7,8 +7,8 @@ struct sd_unit {
 
 struct sd_unit_iter;
 
-int sd_connect(void);
-void sd_disconnect(void);
+int sd_init(void);
+void sd_uninit(void);
 
 struct sd_unit_iter *sd_unit_iterate(void);
 struct sd_unit *sd_unit_iter_next(struct sd_unit_iter *);

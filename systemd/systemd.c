@@ -27,7 +27,7 @@ static struct {
 static struct sd_unit_arr *list_units(void);
 
 int
-sd_connect(void)
+sd_init(void)
 {
 	int r;
 	if (cli_use_system_bus)
@@ -51,7 +51,7 @@ sd_connect(void)
 }
 
 void
-sd_disconnect(void)
+sd_uninit(void)
 {
 	sd_bus_unref(ctx.bus);
 
@@ -100,7 +100,6 @@ list_units(void)
 	int r;
 	sd_bus_message *reply;
 	sd_bus_error error = SD_BUS_ERROR_NULL;
-
 	struct sd_unit_arr *ret = NULL;
 
 	if (sd_bus_call_method(
