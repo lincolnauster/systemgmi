@@ -1,5 +1,5 @@
-CC=gcc
-CFLAGS=-D_POSIX_C_SOURCE=200809L -std=c17 -Wall -Werror -pedantic -g
+CC?=gcc
+CFLAGS?=-D_POSIX_C_SOURCE=200809L -std=c17 -Wall -Werror -pedantic -g
 
 systemgmi: main.o log.o com.o com_util.o machine.o router.o systemd.o \
            threading.o threading_queue.o cli.o
