@@ -101,11 +101,7 @@ list_units(void)
 	sd_bus_message *reply;
 	sd_bus_error error = SD_BUS_ERROR_NULL;
 
-	struct sd_unit_arr *ret = malloc(sizeof(struct sd_unit_arr));
-
-	ret->len = 0;
-	ret->cap = 512; /* this is a guess; might not be optimal. */
-	ret->buf = malloc(sizeof(struct sd_unit) * ret->cap);
+	struct sd_unit_arr *ret = NULL;
 
 	if (sd_bus_call_method(
 		ctx.bus,
@@ -123,6 +119,11 @@ list_units(void)
 		sd_bus_error_free(&error);
 		return NULL;
 	};
+
+	ret = malloc(sizeof(struct sd_unit_arr));
+	ret->len = 0;
+	ret->cap = 512; /* this is a guess; might not be optimal. */
+	ret->buf = malloc(sizeof(struct sd_unit) * ret->cap);
 
 	if ((r = sd_bus_message_enter_container(
 		reply,
