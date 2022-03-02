@@ -53,18 +53,25 @@ sd_init(void)
 void
 sd_uninit(void)
 {
-	sd_bus_unref(ctx.bus);
+	if (ctx.bus)
+		sd_bus_unref(ctx.bus);
 
-	for (int i = 0; i < ctx.units->len; i++) {
-		free(ctx.units->buf[i].name);
-		free(ctx.units->buf[i].desc);
+	if (ctx.units) {
+		for (int i = 0; i < ctx.units->len; i++) {
+			free(ctx.units->buf[i].name);
+			free(ctx.units->buf[i].desc);
+		}
+
+		if (ctx.units->buf)
+			free(ctx.units->buf);
+
+		ctx.units->cap = 0;
+		ctx.units->len = 0;
+		ctx.units->buf = NULL;
+
+		free(ctx.units);
 	}
 
-	free(ctx.units->buf);
-	ctx.units->cap = 0;
-	ctx.units->len = 0;
-	ctx.units->buf = NULL;
-	free(ctx.units);
 	ctx.units = NULL;
 }
 
