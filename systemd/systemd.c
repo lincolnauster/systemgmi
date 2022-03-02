@@ -120,6 +120,7 @@ list_units(void)
 		log_error("Couldn't call ListUnits.");
 		log_error("Sd-bus gave the following error:");
 		log_error(error.message);
+		sd_bus_error_free(&error);
 		return NULL;
 	};
 
